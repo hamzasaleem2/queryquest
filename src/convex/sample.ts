@@ -1,5 +1,4 @@
 import { mutation } from "./_generated/server";
-import { v } from "convex/values";
 
 function formatDate(date: Date): string {
   return date.toISOString().split('T')[0];
