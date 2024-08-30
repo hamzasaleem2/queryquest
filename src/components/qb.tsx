@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Field, Operator, QueryBuilder, RuleGroupType } from 'react-querybuilder';
 import 'react-querybuilder/dist/query-builder.css';
 import { api } from '../convex/_generated/api';
@@ -41,6 +41,23 @@ export default function QB() {
     filterArgs,
     { initialNumItems: 51 }
   );
+
+  const lastRowRef = useRef<HTMLTableRowElement>(null);
+
+  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+    const target = entries[0];
+    if (target.isIntersecting && status === "CanLoadMore") {
+      loadMore(10);
+    }
+  }, [status, loadMore]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, { threshold: 1 });
+    if (lastRowRef.current) {
+      observer.observe(lastRowRef.current);
+    }
+    return () => observer.disconnect();
+  }, [handleObserver, players]);
 
   useEffect(() => {
     setIsLoading(status === 'LoadingMore' || status === 'LoadingFirstPage');
@@ -108,17 +125,17 @@ export default function QB() {
         </div>
       </div>
       {players && (
-  <div className="bg-white shadow-lg rounded-lg p-6">
-    <div className="flex justify-between items-center mb-4">
-      <h2 className="text-2xl font-semibold text-indigo-600">Players:</h2>
-      <div className="text-sm text-indigo-600 min-w-[120px] text-right">
-        {isLoading ? (
-          "Loading..."
-        ) : (
-          `Loaded: ${loadedCount} ${loadedCount === 1 ? 'document' : 'documents'}`
-        )}
-      </div>
-    </div>
+        <div className="bg-white shadow-lg rounded-lg p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-semibold text-indigo-600">Players:</h2>
+            <div className="text-sm text-indigo-600 min-w-[120px] text-right">
+              {isLoading ? (
+                "Loading..."
+              ) : (
+                `Loaded: ${loadedCount} ${loadedCount === 1 ? 'document' : 'documents'}`
+              )}
+            </div>
+          </div>
           <div className="overflow-x-auto">
             <div className="h-96 overflow-y-auto">
               <table className="min-w-full divide-y divide-gray-200">
@@ -132,8 +149,18 @@ export default function QB() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {players.map((player) => (
-                    <tr key={player._id}>
+                  {status === "LoadingMore" && (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                        Loading more...
+                      </td>
+                    </tr>
+                  )}
+                  {players.map((player, index) => (
+                    <tr
+                      key={player._id}
+                      ref={index === players.length - 1 ? lastRowRef : null}
+                    >
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.email}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.registrationDate}</td>
@@ -145,14 +172,6 @@ export default function QB() {
               </table>
             </div>
           </div>
-          {status === "CanLoadMore" && (
-            <button
-              onClick={() => loadMore(10)}
-              className="mt-4 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-300 ease-in-out"
-            >
-              Load More
-            </button>
-          )}
         </div>
       )}
     </div>
