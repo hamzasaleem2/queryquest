@@ -35,7 +35,7 @@ export default function QB() {
     serializedFields: JSON.stringify(fields)
   });
   const [isLoading, setIsLoading] = useState(false);
-
+  const [loadedCount, setLoadedCount] = useState(0);
   const { results: players, status, loadMore } = usePaginatedQuery(
     api.players.getFilteredPaginated,
     filterArgs,
@@ -43,12 +43,14 @@ export default function QB() {
   );
 
   useEffect(() => {
-    if (status === 'LoadingMore' || status === 'LoadingFirstPage') {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
+    setIsLoading(status === 'LoadingMore' || status === 'LoadingFirstPage');
   }, [status]);
+
+  useEffect(() => {
+    if (players) {
+      setLoadedCount(players.length);
+    }
+  }, [players]);
 
   const handleRunQuery = () => {
     setIsLoading(true);
@@ -56,6 +58,7 @@ export default function QB() {
       serializedPredicate: JSON.stringify(query),
       serializedFields: JSON.stringify(fields)
     });
+    setTimeout(() => setIsLoading(false), 100);
   };
 
   const handleClearQuery = () => {
@@ -105,13 +108,17 @@ export default function QB() {
         </div>
       </div>
       {players && (
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold text-indigo-600">Players:</h2>
-            {isLoading && (
-              <div className="text-indigo-600">Loading...</div>
-            )}
-          </div>
+  <div className="bg-white shadow-lg rounded-lg p-6">
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-2xl font-semibold text-indigo-600">Players:</h2>
+      <div className="text-sm text-indigo-600 min-w-[120px] text-right">
+        {isLoading ? (
+          "Loading..."
+        ) : (
+          `Loaded: ${loadedCount} ${loadedCount === 1 ? 'document' : 'documents'}`
+        )}
+      </div>
+    </div>
           <div className="overflow-x-auto">
             <div className="h-96 overflow-y-auto">
               <table className="min-w-full divide-y divide-gray-200">
