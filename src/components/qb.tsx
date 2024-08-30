@@ -68,33 +68,37 @@ export default function QB() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="bg-white shadow-lg rounded-lg p-6">
+    <div className="max-w-full mx-auto space-y-6 overflow-x-auto">
+      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6">
         <QueryBuilder
           fields={fields}
           query={query}
           operators={operators}
           onQueryChange={q => setQuery(q)}
           controlClassnames={{
-            queryBuilder: 'p-4',
-            ruleGroup: 'bg-gray-50 p-4 rounded-md mb-4',
-            combinators: 'bg-white border border-gray-300 rounded px-3 py-2',
-            addRule: 'bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600',
-            addGroup: 'bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600',
-            removeGroup: 'bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600',
+            queryBuilder: 'p-4 min-w-[300px]',
+            ruleGroup: 'flex flex-wrap items-center bg-gray-200 p-2 sm:p-4 rounded-md mb-4',
+            combinators: 'mb-2 sm:mb-0 sm:mr-2',
+            addRule: 'bg-green-500 text-white px-2 py-1 rounded text-sm hover:bg-green-600 mb-2 sm:mb-0 sm:mr-2',
+            addGroup: 'bg-blue-500 text-white px-2 py-1 rounded text-sm hover:bg-blue-600 mb-2 sm:mb-0 sm:mr-2',
+            removeGroup: 'bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600',
             removeRule: 'text-red-500 hover:text-red-700',
+            rule: 'flex flex-wrap items-center mb-2 sm:mb-0',
+            fields: 'mb-2 sm:mb-0 sm:mr-2',
+            operators: 'mb-2 sm:mb-0 sm:mr-2',
+            value: 'mb-2 sm:mb-0 sm:mr-2',
           }}
         />
-        <div className="mt-4 flex justify-end space-x-4">
+        <div className="mt-4 flex flex-wrap justify-end space-x-0 sm:space-x-4 space-y-2 sm:space-y-0">
           <button
             onClick={handleClearQuery}
-            className="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors duration-300 ease-in-out"
+            className="w-full sm:w-auto bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors duration-300 ease-in-out"
           >
             Clear Filters
           </button>
           <button
             onClick={handleRunQuery}
-            className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-300 ease-in-out"
+            className="w-full sm:w-auto bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-300 ease-in-out"
           >
             Run Query
           </button>
