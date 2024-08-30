@@ -20,18 +20,21 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 flex flex-col items-center justify-center p-6">
-      <h1 className="text-3xl font-bold text-indigo-800 mb-8">Query Quest</h1>
-      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 flex flex-col p-6">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-indigo-800">Query Quest</h1>
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-indigo-600 flex items-center gap-1">
+            powered by <ConvexLogo width={69} height={11} />
+          </div>
+          <a href="#" onClick={handleGitHubClick}>
+            <GitHubLogo width={24} height={24} className="text-indigo-600 hover:text-indigo-800 transition-colors" />
+          </a>
+        </div>
+      </div>
+      <div className="flex-grow w-full max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
         <QB />
       </div>
-      <div className="mt-8 text-sm text-indigo-600 flex items-center gap-1">
-        powered by <ConvexLogo width={69} height={11} />
-      </div>
-      <a href="#" onClick={handleGitHubClick} className="mt-4">
-        <GitHubLogo width={24} height={24} className="text-indigo-600 hover:text-indigo-800 transition-colors" />
-      </a>
-
       {showDialog && (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 sm:p-0">
     <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-auto">
